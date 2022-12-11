@@ -1,0 +1,22 @@
+## nca-115-2
+## $Id$
+
+startHtmlPage
+startHtmlBody
+putHeader 0
+
+web::putx {
+    <table border="0" cellpadding="0" cellspacing="0" width="770">
+    {headRow 2 "Contact"}
+    <tr valign="top">
+    {navbar_null}
+    <td width="300">
+    Websh is a product of the Apache Software Foundation's <a href="http://tcl.apache.org/">Apache Tcl</a> group.<br>
+    For more information about how to send email to the Websh list, go to the {pageLink subscribe.html -show "Mailing List"} page.
+    </td>
+  </tr>
+  </table>
+}
+
+finishPage
+

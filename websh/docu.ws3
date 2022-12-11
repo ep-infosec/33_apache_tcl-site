@@ -1,0 +1,36 @@
+## nca-115-2
+## $Id$
+
+startHtmlPage
+startHtmlBody
+putHeader 2
+
+web::putx {
+    <table border="0" cellpadding="0" cellspacing="0" width="770">
+    {headRow 3 "documentation"}
+    <tr valign="top">
+    {navbar_docu}
+    <td width="610">
+    This is your one-stop shop for all Websh documentation.
+    <h2>White Paper</h2>
+
+    The <a href="whitepaper.html">white paper</a> outlines how Websh is 
+    used, describes its architecture, and explains design decisions.
+
+    <h2>Quick Reference</h2>
+
+    Know how to use Websh, but keep forgetting the
+    syntax? The <a href="quickref.html">quick reference</a> has 
+    everything you need to know.<br>
+
+    <h2>Code Examples</h2>
+
+    The <a href="examples.html">examples</a> page demonstrates
+    some Websh features.
+
+    </td>
+    </tr>
+    </table>
+}
+
+finishPage 2

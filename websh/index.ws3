@@ -1,0 +1,65 @@
+## $Id$
+
+startHtmlPage
+startHtmlBody
+putHeader 0 0
+
+web::putx {
+    <table border="0" cellpadding="0" cellspacing="0" width="770">
+      <tr height="30">
+        <td width="300" rowspan="2" valign="top"><img height="380" width="300" src="images/headline.gif" alt="Headline"></td>
+        <td width="315" height="30"><h1>Welcome</h1></td>
+        <td width="10" rowspan="2"></td>
+        <td width="145" height="30"><h1>News</h1>
+        </td>
+      </tr>
+      <tr valign="top">
+        <td width="315"><p>
+<img height="160" width="120" src="images/drei_klein.gif" align="left">
+          The Internet is growing rapidly. Daily you find new
+          applications and new home-pages - new opportunities for
+          success and profit.  The basic technologies behind the
+          Internet, however, have remained stable for years.  Only on
+          a solid base can you build new stuff.
+    </p>
+    <p>
+    Check out the {pageLink examples.html -show "examples"}
+    of Websh applications on this site.
+    </p>
+    <p>
+    Changes in the latest Release: {pageLink http://svn.apache.org/repos/asf/tcl/websh/tags/3.6.0b5/CHANGES -show "Changes in Websh 3.6.0.b5"}
+    </p>
+        </td>
+        <td width="145">
+
+          <table border="0" cellpadding="0" cellspacing="0" width="145">
+
+{newsBarElement "2012-11-06" \
+        {<b>Mailing lists consolidated</b>: Only <a href="mailto:websh-dev@tcl.apache.org">websh-dev @tcl.apache.org</a> is left active for all communication.}
+}
+
+{newsBarElement "2009-09-24" \
+     {<b>Websh 3.6.0b5 available</b>: Pick the {pageLink http://www.apache.org/dyn/closer.lua/tcl/websh/source/websh-3.6.0b5-src.tar.gz -show "tarball"}
+	 or browse the {pageLink download.html -show "download area"}.
+     }
+}
+
+{newsBarElement "2006-03-05" \
+     {<b>Websh 3.6.0b4 available</b>: Pick the {pageLink http://www.apache.org/dyn/closer.lua/tcl/websh/source/websh-3.6.0b4-src.tar.gz -show "tarball"}
+	 or browse the {pageLink download.html -show "download area"}.
+     }
+}
+
+{newsBarElement "2005-11-24" \
+     {<b>Websh 3.6.0b3 available</b>: Pick the {pageLink http://www.apache.org/dyn/closer.lua/tcl/websh/source/websh-3.6.0b3-src.tar.gz -show "tarball"}
+	 or browse the {pageLink download.html -show "download area"}.
+     }
+}
+          </table>
+
+        </td>
+  </tr>
+</table>
+}
+
+finishPage

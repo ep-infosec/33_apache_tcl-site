@@ -1,0 +1,67 @@
+## $Id$
+
+startHtmlPage
+startHtmlBody
+putHeader 5
+
+web::putx {
+
+    <table border="0" cellpadding="0" cellspacing="0" width="770">
+    {headRow 3 "download"}
+    <tr valign="top">
+    {navbar_down 0}
+    <td width="610">
+    <table cellspacing="0" cellpadding="0" border="0">
+    <tr valign="top">
+    <td>
+    <img height="160" width="270" src="images/ausschnitt_download.gif" align="left" alt="graphics"></td>
+
+    <td>
+    Download the latest source code from a mirror:<p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.apache.org/dyn/closer.lua/tcl/websh/source/websh-3.6.0b5-src.tar.gz">websh-3.6.0b5-src.tar.gz</a><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://svn.apache.org/repos/asf/tcl/websh/tags/3.6.0b5/CHANGES">Overview of changes in 3.6.0b5</a>
+
+    <p>Download the latest quick reference (included in the source):
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.apache.org/dyn/closer.lua/tcl/websh/source/quickref-3.6.0b5.tar.gz">quickref-3.6.0b5.tar.gz</a>
+    </td>
+    </tr>
+    </table>
+
+    <p>
+    Or visit the download directory for an index of all downloads:<p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.apache.org/dyn/closer.lua/tcl/websh/">mirrored download directory</a>
+
+    <p>
+    If you would like to be notified when new versions of Websh
+    become available for download, you can subscribe to the Websh
+    user {pageLink subscribe.html -show "mailing list"}.
+    </p>
+
+    <p>
+    To access the latest source from the Subversion repository, use the 
+    following (read-only) URL:</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;{pageLink http://svn.apache.org/repos/asf/tcl/websh/trunk}<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://svn.apache.org/repos/asf/tcl/websh/trunk/CHANGES">Overview of changes in trunk since last release</a>
+    </p>
+    <p>
+    A typical command to checkout the code would be:
+    </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;<tt>svn co http://svn.apache.org/repos/asf/tcl/websh/trunk websh</tt>
+
+    </p>
+
+    <p>
+    <b>Note</b>: Websh 3.6.0b5 is known to work
+    with Sun Solaris 8, 9, and 10, Linux RedHat 8, CenOS 4.6, Suse9.1, 
+    Windows XP and Vista, Mac OSX 8.2 und 8.3.
+    Other Unix platforms are likely to work too.
+    </p>
+    </td>
+    </tr>
+    </table>
+}
+
+finishPage 5

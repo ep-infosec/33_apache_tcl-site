@@ -1,0 +1,565 @@
+# ---------------------------------------------------------------------------
+# common code for the interpreter class websh.interpclass
+# $Id$
+# ---------------------------------------------------------------------------
+
+proc getDocFileName {filename} {
+    return [file join [web::config document_root] websh $filename]
+}
+
+proc pageLink {url args} {
+    if {[string match "*.ws3" $url]} {
+	regsub {\.ws3$} $url ".html" url
+    }
+    set showName $url
+    foreach {arg value} $args {
+	switch -- $arg \
+	    -show { set showName $value} \
+	    -pre { set url "http://$url" }
+    }
+    web::put "<a href=\"$url\">$showName</a>"
+}
+
+proc emailLink {email {showName ""}} {
+    if { [string compare $showName ""] == 0 } {set showName $email }
+    pageLink mailto:$email -show $showName
+}
+
+proc headRow {type mainTitle {rightTitle ""}} {
+
+    if {$type == 1} {
+	return
+    }
+
+    web::putx {
+        <tr height="30">
+        <td width="10" valign="top"></td>
+        <td width="150" height="30"></td>
+        {
+            if {$type == 2} {
+                web::putx {
+                    <td width="300" height="30">
+		    {if {[string length $mainTitle] > 0 } {
+			web::putx {<h1>{web::put $mainTitle}</h1>}
+		    } else {
+			web::putx {&nbsp;}
+		    }}
+                    </td>
+                    <td width="10" height="30"><br>
+                    </td>
+                    <td width="300" height="30">
+		    {if {[string length $rightTitle] > 0 } {
+			web::putx {<h1>{web::put $rightTitle}</h1>}
+		    } else {
+			web::putx {&nbsp;}
+		    }}
+                    </td>
+                }
+            }
+            if {$type == 3} {
+                web::putx {
+                    <td width="610" height="30">
+		    {if {[string length $mainTitle] > 0 } {
+			web::putx {<h1>{web::put $mainTitle}</h1>}
+		    } else {
+			web::putx {&nbsp;}
+		    }}
+                    </td>
+                }
+            }
+            if {$type == 4} {
+                web::putx {
+                    <td width="455" height="30">
+		    {if {[string length $mainTitle] > 0 } {
+			web::putx {<h1>{web::put $mainTitle}</h1>}
+		    } else {
+			web::putx {&nbsp;}
+		    }}
+                    </td>
+                    <td width="10" height="30"><br>
+                    </td>
+                    <td width="145" height="30">
+		    {if {[string length $rightTitle] > 0 } {
+			web::putx {<h1>{web::put $rightTitle}</h1>}
+		    } else {
+			web::putx {&nbsp;}
+		    }}
+                    </td>
+                }
+            }
+        }
+        </tr>
+    }
+}
+
+
+proc navBarElementSub {ref str flag} {
+
+    if { $flag == 1 } {
+	web::putx {
+	    - <a href="{web::put $ref}">{web::put $str}</a><br>
+	}
+	return
+    }
+    if { $flag == 0 } {
+	web::putx {
+	    - {web::put $str}<br>
+	}
+	return
+    }
+    if { $flag == 2 } {
+	web::putx {
+	    - <span class=grey>{web::put $str}</span><br>
+	}
+	return
+    }
+}
+
+proc navBarElementOne {ref str flag} {
+
+    if { $flag == 1 } {
+	web::putx {<a href="{web::put $ref}"><b>{web::put $str}</b></a><br>
+	}
+	return
+    }
+    if { $flag == 0 } {
+	web::putx {<b>{web::put $str}</b><br>
+	}
+	return
+    }
+    if { $flag == 2 } {
+	web::putx {<b class=grey>{web::put $str}</b><br>
+	}
+	return
+    }
+}
+
+proc navBarElement {ref str flag args} {
+
+
+    web::putx {
+        <tr valign="top">
+        <td width="10"><img height="11" width="10" src="images/pfeil.gif"></td>
+        <td class=nav>
+        {
+	    navBarElementOne $ref $str $flag
+            foreach {arg value isLink} $args {
+		navBarElementSub $arg $value $isLink
+	    }
+	}
+	<br></td></tr>
+    }
+}
+
+proc navBarStart {} {
+
+    web::putx {
+	<td width="10"><img height="1" border="0" width="10" src="images/stuntFFFFFF001010.gif"></td>
+        <td width="150">
+        <table border="0" cellpadding="0" cellspacing="0" width="141">
+    }
+}
+
+proc navBarEnd {} {
+
+    web::putx {
+        </table>
+        </td>
+    }
+}
+
+
+proc redPointElement {text} {
+    web::putx {
+        <tr valign="top">
+        <td width="10"><img height="10" width="10" src="images/punkt_rot.gif"></td>
+        <td>{web::putx $text}
+        </td>
+        </tr>
+    }
+}
+
+proc newsBarElement {title {desc ""}} {
+    web::putx {
+        <tr valign="top">
+        <td width="10"><img height="10" width="10" src="images/punkt_rot.gif"></td>
+        <td class=news><b>{web::putx $title}</b><br>
+        {web::putx $desc}
+        </td>
+        </tr>
+    }
+}
+
+proc newsBarElementGrey {title {desc ""}} {
+    web::putx {
+        <tr valign="top">
+        <td width="10"><img height="10" width="10" src="images/punkt_grau.gif"></td>
+        <td class=grey><b>{web::putx $title}</b><br>
+        {web::putx $desc}
+        </td>
+        </tr>
+    }
+}
+
+
+proc uppfeil {link args} {
+    set aName ""
+    set text ""
+    foreach {arg value} $args {
+	switch -- $arg \
+	    -aName { set aName $value} \
+	    -text { set text $value }
+    }
+    web::putx {
+	<tr valign="top">
+	{navBarStart}
+        <tr valign="top">
+        <td width="10"><a href="{web::putx $link}"><img height="10" border="0" width="10" src="images/uppfeil.gif"></a></td>
+	<td></td>
+	</tr>
+	{navBarEnd}
+	<td width="455">
+	{
+	    if {[string compare $aName ""] == 0 } {
+		web::putx {<h2 class=nomargin>{web::putx $text}</h2>}
+	    } else {
+		web::putx {<h2 class="nomargin"><a name="{web::put $aName}">{web::putx $text}</a></h2>}
+	    }
+	}
+	</td>
+	</tr>
+    }
+}
+
+## ============================================================================
+## navigation bars
+## ============================================================================
+
+proc navbar_prod {{where 0}} {
+    web::putx {
+	{navBarStart}
+        {navBarElement "/websh/product.html" "product description" [expr $where != 0] \
+             "#history" "history" 1 \
+             "#tcl" "based on Tcl" 1 \
+             "#design" "design" 1}
+	{navBarEnd}
+    }
+#        {navBarElement "TBD" "Websh in action" 2}
+#        {navBarElement "TBD" "success stories" 2}
+#        {navBarElement "TBD" "comparison chart" 2}
+
+}
+
+proc navbar_docu {{where 0}} {
+    web::putx {
+	{navBarStart}
+        {navBarElement "/websh/docu.html" "documentation" [expr $where != 0]}
+        {navBarElement "/websh/whitepaper.html" "white paper" [expr $where != 1]}
+        {navBarElement "/websh/quickref.html" "quick reference" [expr $where != 2]}
+        {navBarElement "/websh/examples.html" "examples" [expr $where != 4]}
+	{navBarEnd}
+    }
+}
+
+proc navbar_supp {{where 0}} {
+    web::putx {
+	<td width="10"><br></td>
+        <td width="150">
+        <table border="0" cellpadding="0" cellspacing="0" width="141">
+        {navBarElement "/websh/support.html" "support" [expr $where != 0]}
+        {navBarElement "/websh/faq.html" "faq" [expr $where != 1] \
+             "/websh/faq.html#generic" "generic questions" 1 \
+             "/websh/faq.html#technical" "tech questions" 1} \
+        {navBarElement "/websh/subscribe.html" "mailing list" [expr $where != 2]}
+        {navBarElement "http://issues.apache.org/bugzilla/" "bug tracking system" [expr $where != 3]}
+        </table>
+        </td>
+    }
+}
+
+proc navbar_ress {{where 0}} {
+    web::putx {
+	{navBarStart}
+	{navBarEnd}
+    }
+}
+
+proc navbar_down {{where 0}} {
+    web::putx {
+	{navBarStart}
+	{navBarEnd}
+    }
+}
+
+proc navbar_null {} {
+    web::putx {
+	<td width="10"><img height="1" border="0" width="10" src="images/stuntFFFFFF001010.gif"></td>
+        <td width="150">&nbsp;</td>
+    }
+}
+
+## ============================================================================
+## news bars
+## ============================================================================
+
+proc newsbar_supp {} {
+    web::putx {
+        <td width="10"><br></td>
+        <td width="145">
+        <table border="0" cellpadding="0" cellspacing="0" width="145">
+	</table>
+	</td>
+    }
+}
+
+proc newsbar_ress {} {
+    web::putx {
+        <td width="10"></td>
+        <td width="145">
+        <table border="0" cellpadding="0" cellspacing="0" width="145">
+        </table>
+        </td>
+    }
+}
+
+proc jslink {linkname generic onover onout width gif alt} {
+    return "<a href=\"$linkname\" \
+onmouseover=\"swap('$generic','$onover')\" \
+onmouseout=\"swap('$generic','$onout')\"><img height=\"20\" \
+  width=\"$width\" \
+  src=\"/websh/buttons/$gif\" \
+  name=\"$generic\" border=\"0\" alt=\"$alt\"></a>"
+}
+
+
+
+proc startHtmlPage {} {
+    web::putx {
+        <html>
+        <head>
+        <meta http-equiv="content-type" content="text/html;charset=iso-8859-1">
+        <title>Websh - Welcome</title>
+        <script language="JavaScript" src="buttons.js"></script>
+        <link href="websh.css" rel="styleSheet" type="text/css">
+        <meta name="description" content="Websh - the rapid development environment to build powerful web applications.">
+        <META NAME="keywords" CONTENT="websh, Websh, e-commerce, web application, apache, perl,  php, asp, cold fusion">
+        </head>
+    }
+}
+
+proc startHtmlBody {} {
+    web::putx {
+        <body marginwidth="0" marginheight="0" topmargin="0" leftmargin="0"
+        bgcolor="#ffffff" link="#006699" alink="red" vlink="#006699">
+    }
+}
+
+proc putHeader {{mainSectionNr 0} {quickNaviNr 1}} {
+    web::putx {
+        <map name="grafik_navi">
+        <area href="mailto:websh-dev@tcl.apache.org" coords="94,2,154,26" shape="rect">
+        <area href="./" coords="4,2,64,26" shape="rect">
+        <area href="contact.html" coords="184,2,244,26" shape="rect">
+        </map>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" height="76">
+        <tr valign="top">
+    }
+    if {$quickNaviNr == 0} {
+        web::putx {
+            <td width="500" bgcolor="#006699"><img height="50" width="300" src="images/grafik_navi.gif" alt="" border="0" usemap="#grafik_navi"><img height="50" width="200" src="images/grafik_index.gif" alt=""></td>
+        }
+    } else {
+        web::putx {
+            <td width="500" bgcolor="#006699"><img height="50" width="300" src="images/grafik_navi_home.gif" alt="" border="0" usemap="#grafik_navi"><img height="50" width="200" src="images/grafik_index.gif" alt=""></td>
+        }
+    }
+    web::putx {
+        <td><img height="50" width="270" src="images/logo.gif" alt="Websh"></td>
+	<td width="5000" bgcolor="#000000">&nbsp;</td>
+        </tr>
+        <tr>
+        <td width="500">
+        <table border="0" cellpadding="0" cellspacing="0" width="500" height="40">
+    }
+    if {$mainSectionNr == 0} {
+        web::putx {
+            <tr>
+            <td>{web::put [jslink /websh/product.html prod b_prod_b b_prod_a 120 b_prod_a.gif "product description"]}</td>
+            <td>{web::put [jslink /websh/docu.html docu b_docu_b b_docu_a 100 b_docu_a.gif "documentation"]}</td>
+            <td>{web::put [jslink /websh/support.html supp b_supp_b b_supp_a 70 b_supp_a.gif "support"]}</td>
+            <td>{web::put [jslink /websh/resources.html ress b_ress_b b_ress_a 110 b_ress_a.gif "resources and links"]}</td>
+            <td>{web::put [jslink /websh/download.html down b_down_b b_down_a 100 b_down_a.gif "download"]}</td>
+            </tr>
+            <tr>
+            <td colspan="5"><img height="20" width="500" src="images/title_neutral.gif" alt="lines"></td>
+            </tr>
+        }
+    }
+    if {$mainSectionNr == 1} {
+        web::putx {
+            <tr bgcolor="#006699">
+            <td width="120"><br></td>
+            <td>{web::put [jslink /websh/docu.html docu b_docu_b b_docu_a 100 b_docu_a.gif "documentation"]}</td>
+            <td>{web::put [jslink /websh/support.html supp b_supp_b b_supp_a 70 b_supp_a.gif "support"]}</td>
+            <td>{web::put [jslink /websh/resources.html ress b_ress_b b_ress_a 110 b_ress_a.gif "resources and links"]}</td>
+            <td>{web::put [jslink /websh/download.html down b_down_b b_down_a 100 b_down_a.gif "download"]}</td>
+            </tr>
+            <tr height="20">
+            <td width="120" height="20"><img height="20" width="120" src="buttons/b_prod_c.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            <td width="70" height="20"><img height="20" width="70" src="images/title.gif"></td>
+            <td width="110" height="20"><img height="20" width="110" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            </tr>
+        }
+    }
+    if {$mainSectionNr == 2} {
+        web::putx {
+            <tr bgcolor="#006699">
+            <td>{web::put [jslink /websh/product.html prod b_prod_b b_prod_a 120 b_prod_a.gif "product description"]}</td>
+            <td width="100"><br></td>
+            <td>{web::put [jslink /websh/support.html supp b_supp_b b_supp_a 70 b_supp_a.gif "support"]}</td>
+            <td>{web::put [jslink /websh/resources.html ress b_ress_b b_ress_a 110 b_ress_a.gif "resources and links"]}</td>
+            <td>{web::put [jslink /websh/download.html down b_down_b b_down_a 100 b_down_a.gif "download"]}</td>
+            </tr>
+            <tr height="20">
+            <td width="120" height="20"><img height="20" width="120" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="buttons/b_docu_c.gif"></td>
+            <td width="70" height="20"><img height="20" width="70" src="images/title.gif"></td>
+            <td width="110" height="20"><img height="20" width="110" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            </tr>
+        }
+    }
+    if {$mainSectionNr == 3} {
+        web::putx {
+            <tr bgcolor="#006699">
+            <td>{web::put [jslink /websh/product.html prod b_prod_b b_prod_a 120 b_prod_a.gif "product description"]}</td>
+            <td>{web::put [jslink /websh/docu.html docu b_docu_b b_docu_a 100 b_docu_a.gif "documentation"]}</td>
+            <td width="70"><br></td>
+            <td>{web::put [jslink /websh/resources.html ress b_ress_b b_ress_a 110 b_ress_a.gif "resources and links"]}</td>
+            <td>{web::put [jslink /websh/download.html down b_down_b b_down_a 100 b_down_a.gif "download"]}</td>
+            </tr>
+            <tr height="20">
+            <td width="120" height="20"><img height="20" width="120" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            <td width="70" height="20"><img height="20" width="70" src="buttons/b_supp_c.gif"></td>
+            <td width="110" height="20"><img height="20" width="110" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            </tr>
+        }
+    }
+    if {$mainSectionNr == 4} {
+        web::putx {
+            <tr bgcolor="#006699">
+            <td>{web::put [jslink /websh/product.html prod b_prod_b b_prod_a 120 b_prod_a.gif "product description"]}</td>
+            <td>{web::put [jslink /websh/docu.html docu b_docu_b b_docu_a 100 b_docu_a.gif "documentation"]}</td>
+            <td>{web::put [jslink /websh/support.html supp b_supp_b b_supp_a 70 b_supp_a.gif "support"]}</td>
+            <td width="110"><br></td>
+            <td>{web::put [jslink /websh/download.html down b_down_b b_down_a 100 b_down_a.gif "download"]}</td>
+            </tr>
+            <tr height="20">
+            <td width="120" height="20"><img height="20" width="120" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            <td width="70" height="20"><img height="20" width="70" src="images/title.gif"></td>
+            <td width="110" height="20"><img height="20" width="110" src="buttons/b_ress_c.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            </tr>
+        }
+    }
+    if {$mainSectionNr == 5} {
+        web::putx {
+            <tr bgcolor="#006699">
+            <td>{web::put [jslink /websh/product.html prod b_prod_b b_prod_a 120 b_prod_a.gif "product description"]}</td>
+            <td>{web::put [jslink /websh/docu.html docu b_docu_b b_docu_a 100 b_docu_a.gif "documentation"]}</td>
+            <td>{web::put [jslink /websh/support.html supp b_supp_b b_supp_a 70 b_supp_a.gif "support"]}</td>
+            <td>{web::put [jslink /websh/resources.html ress b_ress_b b_ress_a 110 b_ress_a.gif "resources and links"]}</td>
+            <td width="100"><br></td>
+            </tr>
+            <tr height="20">
+            <td width="120" height="20"><img height="20" width="120" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="images/title.gif"></td>
+            <td width="70" height="20"><img height="20" width="70" src="images/title.gif"></td>
+            <td width="110" height="20"><img height="20" width="110" src="images/title.gif"></td>
+            <td width="100" height="20"><img height="20" width="100" src="buttons/b_down_c.gif"></td>
+            </tr>
+        }
+    }
+    web::putx {
+        </table>
+        </td>
+        <td><img height="40" width="270" src="images/logo_strich.gif"></td>
+        </tr>
+        </table>
+
+<div style="padding: 15px; color:#fff; background-color: #069; font-weight: bold; width: 730px; margin: 5px;">
+  We are sorry but we discontinued Websh support and development for lack of resources.
+  Also the discussion mailing list was closed, so if you're interested in taking up this subproject within the Apache Tcl project to bring it back into life please contact private@tcl.apache.org
+</div>
+    }
+}
+
+proc finishPage {{where 0}} {
+    web::putx {
+        <table border="0" cellpadding="0" cellspacing="0" width="770" height="45">
+        <tr valign="top">
+        <td colspan="2">
+        <hr noshade size="1">
+        </td>
+        </tr>
+        <tr valign="top">
+        <td width="10"></td>
+        <td width="760">
+	{
+	    if {$where != 1 } {
+		web::put {<a href="product.html">description</a>&nbsp;|}
+	    } else {
+		web::put {<span class="blue">description</span>&nbsp;|}
+	    }
+	    if {$where != 2 } {
+		web::put {&nbsp;<a href="docu.html">documentation</a>&nbsp;|}
+	    } else {
+		web::put {&nbsp;<span class="blue">documentation</span>&nbsp;|}
+	    }
+	    if {$where != 3 } {
+		web::put {&nbsp;<a href="support.html">support</a>&nbsp;|}
+	    } else {
+		web::put {&nbsp;<span class="blue">support</span>&nbsp;|}
+	    }
+	    if {$where != 4 } {
+		web::put {&nbsp;<a href="resources.html">resources</a>&nbsp;|}
+	    } else {
+		web::put {&nbsp;<span class="blue">resources</span>&nbsp;|}
+	    }
+	    if {$where != 5 } {
+		web::put {&nbsp;<a href="download.html">download</a>&nbsp;|}
+	    } else {
+		web::put {&nbsp;<span class="blue">download</span>&nbsp;|}
+	    }
+	    if {$where != 7 } {
+		web::put {&nbsp;<a href="credits.html">credits</a>&nbsp;|}
+	    } else {
+		web::put {&nbsp;<span class="blue">credits</span>&nbsp;|}
+	    }
+	    if {$where != 6 } {
+		web::put {&nbsp;<a href="copyright.html">copyright</a>}
+	    } else {
+		web::put {&nbsp;<span class="blue">copyright</span>}
+	    }
+	}
+	</td></tr>
+        <tr valign="top">
+        <td colspan="2">
+        <hr noshade size="1">
+        </td>
+        </tr>
+        <tr valign="top">
+        <td width="10"></td>
+        <td width="760">
+        <span class="klein"><b>&copy; Websh - an <a href="http://tcl.apache.org">Apache Tcl</a> project - part of the <a href="http://www.apache.org/">Apache Software Foundation</a></b></span></td>
+        </tr>
+        </table>
+        </body>
+        </html>
+    }
+}
